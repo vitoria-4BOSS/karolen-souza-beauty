@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server"
 import { prisma } from "@/lib/prisma"
 import { requireAdmin } from "@/lib/require-admin"
 import { testimonialSchema } from "@/lib/validations/testimonial.schema"
+import { revalidatePublicSite } from "@/lib/revalidate"
 
 export async function GET() {
   const testimonials = await prisma.testimonial.findMany({ orderBy: { order: "asc" } })
@@ -19,5 +20,6 @@ export async function POST(request: NextRequest) {
   }
 
   const testimonial = await prisma.testimonial.create({ data: parsed.data })
+  revalidatePublicSite()
   return NextResponse.json(testimonial, { status: 201 })
 }

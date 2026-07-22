@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server"
 import { prisma } from "@/lib/prisma"
 import { requireAdmin } from "@/lib/require-admin"
 import { procedureSchema } from "@/lib/validations/procedure.schema"
+import { revalidatePublicSite } from "@/lib/revalidate"
 
 type Params = { params: Promise<{ id: string }> }
 
@@ -20,6 +21,7 @@ export async function PATCH(request: NextRequest, { params }: Params) {
   }
 
   const procedure = await prisma.procedure.update({ where: { id }, data: parsed.data })
+  revalidatePublicSite()
   return NextResponse.json({ ...procedure, price: Number(procedure.price) })
 }
 
@@ -30,6 +32,7 @@ export async function DELETE(_request: NextRequest, { params }: Params) {
   const { id } = await params
   try {
     await prisma.procedure.delete({ where: { id } })
+    revalidatePublicSite()
     return NextResponse.json({ ok: true })
   } catch {
     return NextResponse.json(

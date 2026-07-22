@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server"
 import { prisma } from "@/lib/prisma"
 import { requireAdmin } from "@/lib/require-admin"
 import { procedureSchema } from "@/lib/validations/procedure.schema"
+import { revalidatePublicSite } from "@/lib/revalidate"
 
 export async function GET() {
   const procedures = await prisma.procedure.findMany({ orderBy: { order: "asc" } })
@@ -22,6 +23,7 @@ export async function POST(request: NextRequest) {
   }
 
   const procedure = await prisma.procedure.create({ data: parsed.data })
+  revalidatePublicSite()
   return NextResponse.json(
     { ...procedure, price: Number(procedure.price) },
     { status: 201 }

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server"
 import { prisma } from "@/lib/prisma"
 import { requireAdmin } from "@/lib/require-admin"
+import { revalidatePublicSite } from "@/lib/revalidate"
 
 export async function DELETE(
   _request: NextRequest,
@@ -11,5 +12,6 @@ export async function DELETE(
 
   const { id } = await params
   await prisma.beforeAfter.delete({ where: { id } })
+  revalidatePublicSite()
   return NextResponse.json({ ok: true })
 }

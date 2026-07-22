@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server"
 import { prisma } from "@/lib/prisma"
 import { requireAdmin } from "@/lib/require-admin"
 import { siteSettingsSchema } from "@/lib/validations/settings.schema"
+import { revalidatePublicSite } from "@/lib/revalidate"
 
 export async function GET() {
   const settings = await prisma.siteSettings.findUnique({ where: { id: "singleton" } })
@@ -29,5 +30,6 @@ export async function PUT(request: NextRequest) {
     create: { id: "singleton", ...rest, colors: JSON.stringify(colors) },
   })
 
+  revalidatePublicSite()
   return NextResponse.json(settings)
 }

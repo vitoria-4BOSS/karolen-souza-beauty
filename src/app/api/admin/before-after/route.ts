@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server"
 import { prisma } from "@/lib/prisma"
 import { requireAdmin } from "@/lib/require-admin"
 import { beforeAfterSchema } from "@/lib/validations/gallery.schema"
+import { revalidatePublicSite } from "@/lib/revalidate"
 
 export async function GET() {
   const items = await prisma.beforeAfter.findMany({ orderBy: { order: "asc" } })
@@ -19,5 +20,6 @@ export async function POST(request: NextRequest) {
   }
 
   const item = await prisma.beforeAfter.create({ data: parsed.data })
+  revalidatePublicSite()
   return NextResponse.json(item, { status: 201 })
 }

@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server"
 import { prisma } from "@/lib/prisma"
 import { requireAdmin } from "@/lib/require-admin"
 import { testimonialSchema } from "@/lib/validations/testimonial.schema"
+import { revalidatePublicSite } from "@/lib/revalidate"
 
 type Params = { params: Promise<{ id: string }> }
 
@@ -20,6 +21,7 @@ export async function PATCH(request: NextRequest, { params }: Params) {
     where: { id },
     data: parsed.data,
   })
+  revalidatePublicSite()
   return NextResponse.json(testimonial)
 }
 
@@ -29,5 +31,6 @@ export async function DELETE(_request: NextRequest, { params }: Params) {
 
   const { id } = await params
   await prisma.testimonial.delete({ where: { id } })
+  revalidatePublicSite()
   return NextResponse.json({ ok: true })
 }
