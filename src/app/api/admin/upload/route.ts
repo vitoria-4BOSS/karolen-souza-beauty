@@ -34,8 +34,10 @@ export async function POST(request: NextRequest) {
   const filename = `${crypto.randomUUID()}.${ext}`
 
   // Em produção (Vercel), o disco é somente leitura — usamos o Vercel Blob.
-  // Sem BLOB_READ_WRITE_TOKEN (ex: rodando localmente), caímos para public/uploads.
-  if (process.env.BLOB_READ_WRITE_TOKEN) {
+  // O SDK autentica via BLOB_READ_WRITE_TOKEN (legado) ou, com uma store conectada
+  // ao projeto, via BLOB_STORE_ID + token OIDC automático (sem token manual).
+  // Sem nenhum dos dois (ex: rodando localmente), caímos para public/uploads.
+  if (process.env.BLOB_READ_WRITE_TOKEN || process.env.BLOB_STORE_ID) {
     const blob = await put(filename, file, { access: "public" })
     return NextResponse.json({ url: blob.url }, { status: 201 })
   }
