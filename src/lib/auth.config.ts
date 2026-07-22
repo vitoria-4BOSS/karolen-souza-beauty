@@ -6,6 +6,7 @@ import type { NextAuthConfig } from "next-auth"
  * que roda apenas em contexto Node.js (API routes, Server Components).
  */
 export const authConfig = {
+  trustHost: true,
   session: { strategy: "jwt" },
   pages: { signIn: "/admin/login" },
   providers: [],
