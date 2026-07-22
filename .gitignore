@@ -47,3 +47,6 @@ next-env.d.ts
 # uploads
 /public/uploads
 
+# scripts locais de dev (não fazem parte do deploy)
+/dev-server.cmd
+
