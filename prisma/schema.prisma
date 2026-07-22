@@ -1,0 +1,128 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  // Em produção, troque para "postgresql" e aponte DATABASE_URL para o Postgres.
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model AdminUser {
+  id           String   @id @default(cuid())
+  name         String
+  email        String   @unique
+  passwordHash String
+  createdAt    DateTime @default(now())
+}
+
+model Procedure {
+  id          String        @id @default(cuid())
+  name        String
+  slug        String        @unique
+  description String
+  durationMin Int
+  price       Decimal
+  imageUrl    String
+  active      Boolean       @default(true)
+  order       Int           @default(0)
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  appointments Appointment[]
+}
+
+model Professional {
+  id           String        @id @default(cuid())
+  name         String
+  photoUrl     String
+  bio          String
+  active       Boolean       @default(true)
+  workingHours WorkingHour[]
+  blockedDates BlockedDate[]
+  appointments Appointment[]
+}
+
+model WorkingHour {
+  id             String       @id @default(cuid())
+  professionalId String
+  professional   Professional @relation(fields: [professionalId], references: [id], onDelete: Cascade)
+  dayOfWeek      Int // 0 = domingo ... 6 = sábado
+  startTime      String // "09:00"
+  endTime        String // "18:00"
+
+  @@unique([professionalId, dayOfWeek])
+}
+
+model BlockedDate {
+  id             String        @id @default(cuid())
+  date           DateTime
+  professionalId String?
+  professional   Professional? @relation(fields: [professionalId], references: [id], onDelete: Cascade)
+  reason         String?
+  createdAt      DateTime      @default(now())
+}
+
+enum AppointmentStatus {
+  PENDING
+  CONFIRMED
+  CANCELLED
+}
+
+model Appointment {
+  id             String            @id @default(cuid())
+  procedureId    String
+  procedure      Procedure         @relation(fields: [procedureId], references: [id])
+  professionalId String
+  professional   Professional      @relation(fields: [professionalId], references: [id])
+  date           DateTime
+  time           String // "14:30"
+  clientName     String
+  clientPhone    String
+  notes          String?
+  status         AppointmentStatus @default(PENDING)
+  createdAt      DateTime          @default(now())
+
+  @@unique([professionalId, date, time])
+}
+
+model GalleryImage {
+  id        String   @id @default(cuid())
+  url       String
+  category  String   @default("geral")
+  order     Int      @default(0)
+  createdAt DateTime @default(now())
+}
+
+model BeforeAfter {
+  id        String   @id @default(cuid())
+  title     String
+  beforeUrl String
+  afterUrl  String
+  order     Int      @default(0)
+  createdAt DateTime @default(now())
+}
+
+model Testimonial {
+  id        String   @id @default(cuid())
+  name      String
+  photoUrl  String?
+  rating    Int      @default(5)
+  comment   String
+  active    Boolean  @default(true)
+  order     Int      @default(0)
+  createdAt DateTime @default(now())
+}
+
+model SiteSettings {
+  id               String   @id @default("singleton")
+  studioName       String   @default("Studio de Sobrancelhas")
+  phone            String   @default("")
+  whatsapp         String   @default("")
+  instagram        String   @default("")
+  address          String   @default("")
+  mapEmbedUrl      String   @default("")
+  openingHoursText String   @default("")
+  logoUrl          String   @default("")
+  colors           String   @default("{}") // JSON: primary, secondary, accent, background, button, text
+  updatedAt        DateTime @updatedAt
+}
