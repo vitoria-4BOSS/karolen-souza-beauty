@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation"
 import { signOut } from "next-auth/react"
 import {
   LayoutDashboard,
+  User,
   Sparkles,
   Tag,
   Images,
@@ -18,6 +19,7 @@ import { cn } from "@/lib/utils"
 
 const LINKS = [
   { href: "/admin", label: "Dashboard", icon: LayoutDashboard },
+  { href: "/admin/sobre", label: "Sobre", icon: User },
   { href: "/admin/procedimentos", label: "Procedimentos", icon: Sparkles },
   { href: "/admin/precos", label: "Valores", icon: Tag },
   { href: "/admin/galeria", label: "Galeria", icon: Images },

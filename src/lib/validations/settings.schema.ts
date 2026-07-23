@@ -31,6 +31,7 @@ export const professionalSchema = z.object({
 })
 
 export type ProfessionalInput = z.infer<typeof professionalSchema>
+export type ProfessionalFormValues = z.input<typeof professionalSchema>
 
 export const workingHourSchema = z.object({
   professionalId: z.string().min(1),
