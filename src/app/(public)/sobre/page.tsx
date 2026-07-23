@@ -60,24 +60,18 @@ export default async function SobrePage() {
               respeitando a simetria natural do seu rosto.
             </p>
 
-            <div className="border-border/60 mt-8 grid grid-cols-3 gap-4 border-y py-6">
+            <div className="border-border/60 mt-8 grid grid-cols-2 gap-4 border-y py-6">
               <div className="text-center">
                 <p className="font-heading text-brand-primary text-2xl font-semibold">
-                  10+
+                  15+
                 </p>
                 <p className="text-foreground/60 mt-1 text-xs">Anos de experiência</p>
               </div>
               <div className="text-center">
                 <p className="font-heading text-brand-primary text-2xl font-semibold">
-                  3000+
+                  1000+
                 </p>
                 <p className="text-foreground/60 mt-1 text-xs">Clientes atendidas</p>
-              </div>
-              <div className="text-center">
-                <p className="font-heading text-brand-primary text-2xl font-semibold">
-                  4
-                </p>
-                <p className="text-foreground/60 mt-1 text-xs">Certificações</p>
               </div>
             </div>
           </AnimatedSection>
